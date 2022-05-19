@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- 'status' sets log level for parsing configuration file itself -->
+<Configuration status="INFO">
+    <Properties>
+        <!-- Sets variable 'LOG_PATTERN', defining how log line will look like -->
+        <Property name="LOG_PATTERN">%sn %d{yyyy-MM-dd HH:mm:ss} [%-6p] %c{3}.%M(%F:%L) - %m%n</Property>
+        <!-- LOG_DIR may be set by maven filtering feature: -->
+        <Property name="LOG_DIR">@logging.path@</Property>
+        <!-- APPENDER may be set by maven filtering feature, to set 'console' or 'file' appender: -->
+        <Property name="APPENDER">file</Property>
+    </Properties>
+    <Appenders>
+        <!-- Sets console output: -->
+        <Console name="console" target="SYSTEM_OUT">
+            <PatternLayout pattern="${LOG_PATTERN}"/>
+        </Console>
+        <!-- Sets output to file, and names it 'file' -->
+        <RollingRandomAccessFile append="true" fileName="${LOG_DIR}/log4j2.log"
+                                 filePattern="${LOG_DIR}/log4j2.%d{yyyy-MM-dd}.nr%i.log.gz" name="file">
+            <PatternLayout>
+                <Pattern>${LOG_PATTERN}</Pattern>
+            </PatternLayout>
+            <Policies>
+                <SizeBasedTriggeringPolicy size="1 MB"/>
+                <TimeBasedTriggeringPolicy/>
+            </Policies>
+            <DefaultRolloverStrategy max="3"/>
+        </RollingRandomAccessFile>
+    </Appenders>
+    <Loggers>
+        <!-- Sets debug for Class 'com.example.package.Clazz', and attaches to file 'file' -->
+        <Logger name="com.company.core.Main" level="warn" additivity="false">
+            <AppenderRef ref="file"/>
+        </Logger>
+        <logger name="com.company.core.Main" level="info" additivity="false">
+            <AppenderRef ref="console"/>
+        </logger>
+
+
+        <!-- Sets 'info' for package 'org.springframework' -->
+        <Logger name="com.company.core" level="info"/>
+        <!--        <Logger name="com.company.Parser" level="warn"/>-->
+        <!--        <Logger name="com.company.commands" level="warn"/>-->
+        <Root level="info">
+            <AppenderRef ref="file" level="info"/>
+            <AppenderRef ref="console" level="info"/>
+        </Root>
+    </Loggers>
+</Configuration>

@@ -1,0 +1,4 @@
+define a 4
+push a
+sqrt
+print
