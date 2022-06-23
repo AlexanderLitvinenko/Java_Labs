@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+<?import javafx.scene.text.Text?>
+
+<VBox alignment="CENTER" prefHeight="600.0" prefWidth="800.0" spacing="20.0" style="-fx-background-color: #FFAF;" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ru.nsu.litvinenko.lab5.controllers.AuthorizationController">
+   <children>
+      <Label fx:id="label" style="-fx-background-color: #FFAF;" text="Write your NickName">
+         <font>
+            <Font name="Calibri Bold" size="40.0" />
+         </font></Label>
+      <TextField fx:id="nameField" prefHeight="26.0" prefWidth="600.0" promptText="Your nickname is:" style="-fx-background-color: #FFFF; -fx-border-color: #AAAA;">
+         <font>
+            <Font size="29.0" />
+         </font>
+      </TextField>
+      <Text fx:id="error" fill="RED" strokeType="OUTSIDE" strokeWidth="0.0" wrappingWidth="230.93671035766602" />
+      <Button fx:id="connectButton" text="Connect">
+         <font>
+            <Font name="Calibri" size="29.0" />
+         </font></Button>
+   </children>
+   <padding>
+      <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
+   </padding>
+</VBox>
