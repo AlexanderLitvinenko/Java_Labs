@@ -1,0 +1,8 @@
++ Plus
+* Multiply
+/ Divide
+sqrt Sqrt
+pop Pop
+push Push
+print Print
+define Define
