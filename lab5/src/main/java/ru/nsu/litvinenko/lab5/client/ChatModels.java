@@ -11,6 +11,8 @@ import javafx.scene.input.KeyCombination;
 import javafx.scene.input.KeyEvent;
 import javafx.util.Duration;
 import ru.nsu.litvinenko.lab5.constants.Constants;
+import ru.nsu.litvinenko.lab5.general.GsonMessage;
+import ru.nsu.litvinenko.lab5.general.SocketConnect;
 
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -22,7 +24,7 @@ import java.util.Scanner;
 public class ChatModels {
 
 
-    public static void pushMessage(KeyEvent keyEvent, TextArea message, String name, SimpleDateFormat formatForDateNow, Chat finalChat, final String END_ID) {
+    public static void pushMessage(SocketConnect socketConnect, KeyEvent keyEvent, TextArea message, String name, SimpleDateFormat formatForDateNow, Chat finalChat) {
         KeyCodeCombination keyComb = new KeyCodeCombination(KeyCode.ENTER, KeyCombination.SHIFT_DOWN);
         if (keyComb.match(keyEvent)) {
             int position = message.getCaretPosition();
@@ -33,22 +35,27 @@ public class ChatModels {
             Date date = new Date();
             message.setText(message.getText().substring(Constants.START, position - Constants.OFFSET) + message.getText().substring(position));
 
-            String messageText = message.getText().trim() + Constants.NEXT_LINE + END_ID;
+            String messageText = message.getText().trim();
             message.setText(Constants.EMPTY_STR);
             try {
-                finalChat.chat(Constants.NAME + name + formatForDateNow.format(date) + Constants.NEXT_LINE + messageText);
+                GsonMessage gsonMessage = new GsonMessage();
+                gsonMessage.setMessage(messageText);
+                gsonMessage.setName(name);
+                gsonMessage.setDateAndTime(formatForDateNow.format(date));
+                finalChat.chat(gsonMessage);
             } catch (IOException e) {
                 e.printStackTrace();
             }
         }
     }
 
-    public static void startTimeLineRequests(Chat finalChat, final String NAME_ID) {
+    public static void startTimeLineRequests(Chat finalChat) {
+        GsonMessage gsonMessage = new GsonMessage();
         Timeline timeline = new Timeline(new KeyFrame(
-                Duration.millis(Constants.TIME_TO_GETTER_RESOURCES), //1000 мс * 60 сек = 1 мин
+                Duration.millis(Constants.TIME_TO_GETTER_RESOURCES),
                 ae -> {
                     try {
-                        finalChat.chat(NAME_ID);
+                        finalChat.chat(gsonMessage);
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
@@ -58,10 +65,10 @@ public class ChatModels {
         timeline.play();
     }
 
-    public static Chat loadChatResources(Socket socket, ObservableList<String> members, ObservableList<Label> chat, Scanner scanner, PrintWriter writer) {
+    public static Chat loadChatResources(SocketConnect socketConnect, ObservableList<String> members, ObservableList<Label> chat) {
         Chat newChat = null;
         try {
-            newChat = new Chat(socket, members, chat, scanner, writer);
+            newChat = new Chat(socketConnect, members, chat);
             newChat.chat();
         } catch (IOException e) {
             e.printStackTrace();

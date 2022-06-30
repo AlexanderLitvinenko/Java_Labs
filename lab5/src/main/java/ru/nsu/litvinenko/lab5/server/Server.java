@@ -1,6 +1,9 @@
 package ru.nsu.litvinenko.lab5.server;
 
 
+import ru.nsu.litvinenko.lab5.general.GsonMessage;
+import ru.nsu.litvinenko.lab5.general.SocketConnect;
+
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
@@ -11,7 +14,7 @@ import java.util.concurrent.atomic.AtomicReference;
 public class Server {
 
     private ConcurrentHashMap<String, SocketConnect> mapOfNamesAndSockets;
-    private AtomicReference<String>[] messageHistory;
+    private AtomicReference<GsonMessage>[] messageHistory;
 
     private Server() {
         mapOfNamesAndSockets = new ConcurrentHashMap<>();

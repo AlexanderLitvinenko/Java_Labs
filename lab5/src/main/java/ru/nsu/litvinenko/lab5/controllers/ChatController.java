@@ -20,6 +20,7 @@ import javafx.scene.input.ClipboardContent;
 import ru.nsu.litvinenko.lab5.client.Chat;
 import ru.nsu.litvinenko.lab5.client.ChatModels;
 import ru.nsu.litvinenko.lab5.constants.Constants;
+import ru.nsu.litvinenko.lab5.general.SocketConnect;
 
 public class ChatController implements Initializable {
     @FXML
@@ -29,15 +30,11 @@ public class ChatController implements Initializable {
     @FXML
     private TextArea message;
 
-    private Socket socket;
-    private Scanner scanner;
-    private PrintWriter writer;
+    private SocketConnect socketConnect;
     private String name;
 
-    public ChatController(Socket socket, Scanner scanner, PrintWriter writer, String name) {
-        this.socket = socket;
-        this.scanner = scanner;
-        this.writer = writer;
+    public ChatController(SocketConnect socketConnect, String name) {
+        this.socketConnect = socketConnect;
         this.name = name;
     }
 
@@ -54,10 +51,10 @@ public class ChatController implements Initializable {
         MultipleSelectionModel<String> participantSelectionModel = listViewMembers.getSelectionModel();
 
 
-        Chat finalChat = ChatModels.loadChatResources(socket, observableMembers, observableChat, scanner, writer);
+        Chat finalChat = ChatModels.loadChatResources(socketConnect, observableMembers, observableChat);
         SimpleDateFormat formatForDateNow = new SimpleDateFormat(Constants.PATTERN);
-        message.setOnKeyPressed(keyEvent -> ChatModels.pushMessage(keyEvent, message, name, formatForDateNow, finalChat, Constants.END_OF_MESSAGE));
-        ChatModels.startTimeLineRequests(finalChat, Constants.MEMBERS);
+        message.setOnKeyPressed(keyEvent -> ChatModels.pushMessage(socketConnect, keyEvent, message, name, formatForDateNow, finalChat));
+        ChatModels.startTimeLineRequests(finalChat);
 
         chatSelectionModel.selectedItemProperty().addListener((changed, oldValue, newValue) -> {
             content.putString(newValue.getText());

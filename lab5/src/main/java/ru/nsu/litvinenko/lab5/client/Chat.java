@@ -2,6 +2,8 @@ package ru.nsu.litvinenko.lab5.client;
 
 import javafx.collections.ObservableList;
 import javafx.scene.control.Label;
+import ru.nsu.litvinenko.lab5.general.GsonMessage;
+import ru.nsu.litvinenko.lab5.general.SocketConnect;
 
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -9,24 +11,21 @@ import java.net.Socket;
 import java.util.Scanner;
 
 public class Chat {
-    private Socket socket;
-    private PrintWriter writer;
-    private Scanner scanner;
+    private SocketConnect socketConnect;
     private ObservableList<String> members;
     private ObservableList<Label> chat;
 
-    public Chat(Socket socket, ObservableList<String> members, ObservableList<Label> chat, Scanner scanner, PrintWriter writer) throws IOException {
+    public Chat(SocketConnect socketConnect, ObservableList<String> members, ObservableList<Label> chat) throws IOException {
         this.chat = chat;
         this.members = members;
-        this.socket = socket;
-        this.writer = writer;
-        this.scanner = scanner;
+        this.socketConnect = socketConnect;
     }
 
-    public void chat(String text) throws IOException {
-        writer.println(text);
+    public void chat(GsonMessage gsonMessage) throws IOException {
+        socketConnect.getPrintWriter().println(socketConnect.getGson().toJson(gsonMessage));
     }
+
     public void chat() throws IOException {
-        new Thread(new Connect(socket, members,chat, scanner)).start();
+        new Thread(new Connect(socketConnect, members, chat)).start();
     }
 }
